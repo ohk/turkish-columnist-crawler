@@ -1,0 +1,28 @@
+{
+    "name": "turkish-columnist-crawler",
+    "version": "1.0.0",
+    "description": "Crawl the columns on newspaper websites.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ohkamisli/turkish-columnist-crawler.git"
+    },
+    "keywords": [
+        "newspaper",
+        "turkish",
+        "columnsist"
+    ],
+    "author": "Omer Hamid Kamisli",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/ohkamisli/turkish-columnist-crawler/issues"
+    },
+    "homepage": "https://github.com/ohkamisli/turkish-columnist-crawler#readme",
+    "dependencies": {
+        "fs-extra": "^9.0.0",
+        "puppeteer": "^3.0.0"
+    }
+}
