@@ -16,10 +16,12 @@ async function getData(url, filePath, saveDisk, strOp) {
      * Get content of page
      */
     let data = await page.evaluate(() => {
-        let author = document.querySelector('div.news-cat > a:nth-child(2)').textContent
-        let title = document.querySelector('h1').textContent
-        let date = document.querySelector('div.editor-col._flex._aic > div > div > span').textContent
-        let content = document.querySelector('div.author-the-content.content-element').innerText
+        let author = document.querySelector('h2 > a').textContent
+        let title = document.querySelector('div > h1').textContent
+        let date = document.querySelector('div.article-date').textContent
+        let content =
+            document.querySelector('div.article-content.news-description').textContent +
+            document.querySelector('div.article-content.news-text').textContent
 
         return { author, title, date, content }
     })
@@ -56,31 +58,47 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
      */
     let urls = []
     let returnData = []
-
     /**
      * Get last Urls
      */
-    var docUrl = await page.evaluate(() => {
-        let objects = []
-
-        elements = document.querySelectorAll('div.news-body > ul > li')
-        console.log(elements)
-        elements.forEach((el) => {
-            objects.push({
-                url: el.children[0].getAttribute('href'),
-                date: el.children[0].children[1].innerText
+    let limitv2 = limit
+    if (limit === -1) {
+        limitv2 = 100
+    }
+    let objects = []
+    try {
+        /**
+         * Hurriyet newspaper has 8 articles on each page.
+         */
+        for (let index = 0; index < limitv2 / 8; index++) {
+            let tmpObj = await page.evaluate(() => {
+                let objects = []
+                elements = document.querySelectorAll('div.highlighted-box.mb20')
+                elements.forEach((el) => {
+                    objects.push({
+                        url: 'https://www.hurriyet.com.tr' + el.children[0].children[0].getAttribute('href'),
+                        date: el.children[1].textContent
+                    })
+                })
+                return objects
             })
-        })
-        return objects
-    })
+            /**
+             * create pages url
+             */
+            await page.goto(url + '?p=' + (2 + index))
 
+            objects = objects.concat(tmpObj)
+        }
+    } catch (error) {
+        console.log(error)
+    }
     /**
      * filter urls
      */
-    for (var index in docUrl) {
+    for (var index in objects) {
         if (limit === -1 || urls.length < limit) {
-            if (date === null || date < dParser.convertToDate(docUrl[index].date)) {
-                urls.push(docUrl[index].url)
+            if (date === null || date < dParser.convertToDate(objects[index].date)) {
+                urls.push(objects[index].url)
             } else {
                 break
             }
@@ -91,7 +109,11 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
     /**
      * Get Data
      */
+
     urls.forEach((url) => {
+        /*let data = await getData( url, filePath, saveDisk, strOp).then((data) =>{
+            returnData.push(data)
+        })*/
         returnData.push(getData(url, filePath, saveDisk, strOp))
     })
     browser.close()

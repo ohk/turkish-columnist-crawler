@@ -16,7 +16,7 @@
         "columnsist"
     ],
     "author": "Omer Hamid Kamisli",
-    "license": "GPL-3.0-or-later",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/ohkamisli/turkish-columnist-crawler/issues"
     },
