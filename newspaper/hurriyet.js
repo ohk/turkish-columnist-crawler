@@ -4,13 +4,10 @@ const dParser = require('../external/dateParser')
 const strOps = require('../external/stringOps')
 const path = require('path')
 
-async function getData(url, filePath, saveDisk, strOp) {
+async function getData(page, url, filePath, saveDisk, strOp) {
     /**
      * Go to url
      */
-    let browser = await puppeteer.launch()
-    let page = await browser.newPage()
-    await page.setDefaultNavigationTimeout(0)
     await page.goto(url, { waitUntil: 'domcontentloaded' })
     /**
      * Get content of page
@@ -22,10 +19,8 @@ async function getData(url, filePath, saveDisk, strOp) {
         let content =
             document.querySelector('div.article-content.news-description').textContent +
             document.querySelector('div.article-content.news-text').textContent
-
         return { author, title, date, content }
     })
-
     /**
      * transform the text to NER format if selected
      */
@@ -40,6 +35,7 @@ async function getData(url, filePath, saveDisk, strOp) {
         fs.outputFileSync(filename, data.content)
         data.filePath = filename
     }
+    data.subUrl = url
     browser.close()
     return data
 }
@@ -92,6 +88,7 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
     } catch (error) {
         console.log(error)
     }
+
     /**
      * filter urls
      */
@@ -106,18 +103,17 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
             break
         }
     }
+
     /**
      * Get Data
      */
 
-    urls.forEach((url) => {
-        /*let data = await getData( url, filePath, saveDisk, strOp).then((data) =>{
-            returnData.push(data)
-        })*/
-        returnData.push(getData(url, filePath, saveDisk, strOp))
-    })
+    for (let iC = 0; iC < urls.length; iC++) {
+        let data = await getData(page, urls[iC], filePath, saveDisk, strOp)
+        data.mainUrl = url
+        returnData.push(data)
+    }
     browser.close()
-    console.log(returnData.length)
     return returnData
 }
 

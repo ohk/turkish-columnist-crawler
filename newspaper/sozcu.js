@@ -4,13 +4,10 @@ const dParser = require('../external/dateParser')
 const strOps = require('../external/stringOps')
 const path = require('path')
 
-async function getData(url, filePath, saveDisk, strOp) {
+async function getData(page, url, filePath, saveDisk, strOp) {
     /**
      * Go to url
      */
-    let browser = await puppeteer.launch()
-    let page = await browser.newPage()
-    await page.setDefaultNavigationTimeout(0)
     await page.goto(url, { waitUntil: 'domcontentloaded' })
     /**
      * Get content of page
@@ -38,6 +35,7 @@ async function getData(url, filePath, saveDisk, strOp) {
         fs.outputFileSync(filename, data.content)
         data.filePath = filename
     }
+    data.subUrl = url
     browser.close()
     return data
 }
@@ -91,11 +89,12 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
     /**
      * Get Data
      */
-    urls.forEach((url) => {
-        returnData.push(getData(url, filePath, saveDisk, strOp))
-    })
+    for (let iC = 0; iC < urls.length; iC++) {
+        let data = await getData(page, urls[iC], filePath, saveDisk, strOp)
+        data.mainUrl = url
+        returnData.push(data)
+    }
     browser.close()
-    console.log(returnData.length)
     return returnData
 }
 
