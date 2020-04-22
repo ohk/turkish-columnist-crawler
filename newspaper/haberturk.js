@@ -4,39 +4,6 @@ const dParser = require('../external/dateParser')
 const strOps = require('../external/stringOps')
 const path = require('path')
 
-async function getDataSKORER(page, url, filePath, saveDisk, strOp) {
-    /**
-     * Go to url
-     */
-    await page.goto(url, { waitUntil: 'domcontentloaded' })
-    /**
-     * Get content of page
-     */
-    let data = await page.evaluate(() => {
-        let author = document.querySelector('div > h5').textContent
-        let title = document.querySelector('div > h1').textContent
-        let date = document.querySelector('div.article__time > div:nth-child(1)').textContent
-        let content = document.querySelector('div.article__detail').textContent
-        return { author, title, date, content }
-    })
-    /**
-     * transform the text to NER format if selected
-     */
-    if (strOp === true) {
-        data.content = strOps.convertText(data.content)
-    }
-    /**
-     * save the text if selected
-     */
-    if (saveDisk === true) {
-        let filename = path.join(filePath + '/' + data.author + '/' + dParser.convertToString(data.date) + '.txt')
-        fs.outputFileSync(filename, data.content)
-        data.filePath = filename
-    }
-    data.subUrl = url
-    return data
-}
-
 async function getData(page, url, filePath, saveDisk, strOp) {
     /**
      * Go to url
@@ -46,10 +13,10 @@ async function getData(page, url, filePath, saveDisk, strOp) {
      * Get content of page
      */
     let data = await page.evaluate(() => {
-        let author = document.querySelector('h1 > a').textContent
-        let title = document.querySelector('article > h1').textContent
-        let date = document.querySelector('div.article__date').textContent
-        let content = document.querySelector('div.article__content').textContent
+        let author = document.querySelector('span.name').innerText
+        let title = document.querySelector('figcaption > h1').innerText
+        let date = document.querySelector('span > time:nth-child(1)').innerText
+        let content = document.querySelector('#newsWrapper > article > p:nth-child(1)').innerText
         return { author, title, date, content }
     })
     /**
@@ -92,18 +59,38 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
         limitv2 = 100
     }
     let objects = []
+
+    /**
+     * get last article
+     */
+    await page
+        .evaluate((url) => {
+            tmpObj = {}
+            tmpObj.url =
+                'https://www.haberturk.com' +
+                document.querySelector('div.author-container.horizontal > div > a').getAttribute('href')
+            tmpObj.date = document.querySelector('span.last-article-date').textContent
+            return tmpObj
+        }, url)
+        .then((last) => {
+            objects.push(last)
+        })
+
+    /**
+     * get other articles
+     */
     try {
         /**
          * Hurriyet newspaper has 8 articles on each page.
          */
-        for (let index = 0; index < limitv2 / 8; index++) {
+        for (let index = 0; index < limitv2 / 10; index++) {
             let tmpObj = await page.evaluate(() => {
                 let objects = []
-                elements = document.querySelectorAll('div.col-12.col-md-12.col-lg-8 > div')
+                elements = document.querySelectorAll('#AuthorOtherArticles > ul > li')
                 elements.forEach((el) => {
                     objects.push({
-                        url: 'https://www.milliyet.com.tr' + el.children[0].children[0].getAttribute('href'),
-                        date: el.children[1].textContent
+                        url: 'https://www.haberturk.com' + el.children[0].getAttribute('href'),
+                        date: el.children[0].children[2].children[0].textContent
                     })
                 })
                 return objects
@@ -111,7 +98,7 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
             /**
              * create pages url
              */
-            await page.goto(url + '?p=' + (2 + index))
+            await page.goto(url + '/' + (2 + index))
 
             objects = objects.concat(tmpObj)
         }
@@ -139,16 +126,13 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
      */
 
     for (let iC = 0; iC < urls.length; iC++) {
-        let data
-        if (urls[iC].includes('skorer')) {
-            data = await getDataSKORER(page, urls[iC], filePath, saveDisk, strOp)
-        } else {
-            data = await getData(page, urls[iC], filePath, saveDisk, strOp)
-        }
+        console.log(urls[iC])
+        let data = await getData(page, urls[iC], filePath, saveDisk, strOp)
         data.mainUrl = url
         returnData.push(data)
     }
     browser.close()
+    console.log(returnData)
     return returnData
 }
 
