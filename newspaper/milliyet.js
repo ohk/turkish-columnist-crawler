@@ -94,7 +94,7 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
     let objects = []
     try {
         /**
-         * Hurriyet newspaper has 8 articles on each page.
+         * Milliyet newspaper has 8 articles on each page.
          */
         for (let index = 0; index < limitv2 / 8; index++) {
             let tmpObj = await page.evaluate(() => {
