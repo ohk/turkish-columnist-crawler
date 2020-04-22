@@ -23,6 +23,7 @@
     "homepage": "https://github.com/ohkamisli/turkish-columnist-crawler#readme",
     "dependencies": {
         "fs-extra": "^9.0.0",
-        "puppeteer": "^3.0.0"
+        "puppeteer": "^3.0.0",
+        "puppeteer-autoscroll-down": "^0.1.5"
     }
 }
