@@ -36,7 +36,6 @@ async function getData(page, url, filePath, saveDisk, strOp) {
         data.filePath = filename
     }
     data.subUrl = url
-    browser.close()
     return data
 }
 
