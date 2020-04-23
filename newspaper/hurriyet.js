@@ -39,7 +39,7 @@ async function getData(page, url, filePath, saveDisk, strOp) {
     return data
 }
 
-async function crawl(url, limit, date, filePath, saveDisk, strOp) {
+async function crawl(url, limit, date, filePath, saveDisk, strOp, externalParams) {
     /**
      * create the browser and go to page
      */
@@ -59,6 +59,8 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
     let limitv2 = limit
     if (limit === -1) {
         limitv2 = 100
+    } else if (limit <= 9) {
+        limitv2 = 9
     }
     let objects = []
     try {
@@ -110,6 +112,7 @@ async function crawl(url, limit, date, filePath, saveDisk, strOp) {
     for (let iC = 0; iC < urls.length; iC++) {
         let data = await getData(page, urls[iC], filePath, saveDisk, strOp)
         data.mainUrl = url
+        data.externalParams = externalParams
         returnData.push(data)
     }
     browser.close()
