@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to Turkish Columnist Crawler 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.2-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/ohkamisli/turkish-columnist-crawler/blob/master/documentation/README.md" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
@@ -45,6 +45,19 @@ crawler(url, {
     strOp: false // If you use this parameter, you will see that there are spaces between all punctuation and words.
 })
 ```
+
+## Supported Newspapers
+
+1. www.milliyet.com.tr
+2. www.hurriyet.com.tr
+3. www.sozcu.com.tr
+4. www.haberturk.com
+5. www.evrensel.net
+6. www.yenicaggazetesi.com.tr
+7. www.turkiyegazetesi.com.tr
+8. www.fanatik.com.tr
+9. www.takvim.com.tr
+10. www.sabah.com.tr
 
 ## Author
 

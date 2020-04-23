@@ -1,6 +1,6 @@
 {
     "name": "turkish-columnist-crawler",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Crawl the columns on newspaper websites.",
     "main": "index.js",
     "scripts": {
