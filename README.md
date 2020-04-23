@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to Turkish Columnist Crawler 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/ohkamisli/turkish-columnist-crawler#readme" target="_blank">
+  <a href="https://github.com/ohkamisli/turkish-columnist-crawler/blob/master/documentation/README.md" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://github.com/ohkamisli/turkish-columnist-crawler/graphs/commit-activity" target="_blank">
@@ -28,7 +28,7 @@ npm i turkish-columnist-crawler
 
 ## Usage
 
-This is a simple use case. See the [Documentation]() section for details.
+This is a simple use case. See the [Documentation](https://github.com/ohkamisli/turkish-columnist-crawler/blob/master/documentation/README.md) section for details.
 
 ```
 const crawler = require('turkish-columnist-crawler')
