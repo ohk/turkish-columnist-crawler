@@ -50,8 +50,8 @@ module.exports = async (url, options) => {
             data = await evrensel.crawl(url, limit, date, filePath, saveDisk, strOp, externalParams)
             break
         case 'www.yenicaggazetesi.com.tr':
-            let urlNew = url.slice(0, -4)
-            data = await yenicag.crawl(urlNew, limit, date, filePath, saveDisk, strOp, externalParams)
+            urlYeni = url.slice(0, -4)
+            data = await yenicag.crawl(urlYeni, limit, date, filePath, saveDisk, strOp, externalParams)
             break
         case 'www.turkiyegazetesi.com.tr':
             data = await turkiyeGazetesi.crawl(url, limit, date, filePath, saveDisk, strOp, externalParams)
@@ -60,8 +60,8 @@ module.exports = async (url, options) => {
             data = await fanatik.crawl(url, limit, date, filePath, saveDisk, strOp, externalParams)
             break
         case 'www.takvim.com.tr':
-            let urlNew = url.slice(0, -7)
-            data = await takvim.crawl(urlNew, limit, date, filePath, saveDisk, strOp, externalParams)
+            urlTakvim = url.slice(0, -7)
+            data = await takvim.crawl(urlTakvim, limit, date, filePath, saveDisk, strOp, externalParams)
             break
         case 'www.sabah.com.tr':
             data = await sabah.crawl(url, limit, date, filePath, saveDisk, strOp, externalParams)
